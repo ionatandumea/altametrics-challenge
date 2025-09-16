@@ -10,6 +10,7 @@ import {
 import { InvoicesService } from './invoices.service';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('invoices')
 export class InvoicesController {
@@ -20,6 +21,7 @@ export class InvoicesController {
     return this.invoicesService.create(createInvoiceDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.invoicesService.findAll();
