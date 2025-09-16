@@ -5,8 +5,6 @@ import type { JSX } from "react";
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const userInfo = useAppSelector((state) => state.auth.userInfo);
 
-  console.log(userInfo);
-
   if (!userInfo) {
     return <Navigate to="/" replace />;
   }

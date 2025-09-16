@@ -14,7 +14,7 @@ export const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
-        <Toaster position="bottom-center" />
+        <Toaster position="top-center" />
         <div className="flex min-h-screen items-center justify-center">
           <Routes>
             <Route path="/" element={<Login />} />

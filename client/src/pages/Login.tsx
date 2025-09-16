@@ -17,9 +17,10 @@ import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const formSchema = z.object({
-  email: z.string().email("Invalid email address").min(3).max(100),
+  email: z.email("Invalid email address").min(3).max(100),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters")
@@ -27,7 +28,7 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
-  const { loading, userInfo } = useAppSelector((state) => state.auth);
+  const { loading, userInfo, error } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -37,6 +38,12 @@ const LoginForm = () => {
       navigate("/invoices");
     }
   }, [navigate, userInfo]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Invalid credentials");
+    }
+  }, [error]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,8 +55,7 @@ const LoginForm = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const { email, password } = values;
-    const result = dispatch(userLogin({ email, password }));
-    console.log("LOGIN result", result);
+    dispatch(userLogin({ email, password }));
   }
 
   return (
