@@ -7,9 +7,9 @@ async function seed() {
 
   const admin = await prisma.user.create({
     data: {
-      email: 'admin@example.com',
-      password: 'admin123', // TODO: add the hash of the admin123
-      name: 'Admin',
+      email: 'root@root.com',
+      password: 'root123', // TODO: add the hash of the admin123
+      name: 'John Doe',
     },
   });
 

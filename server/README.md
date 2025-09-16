@@ -1,23 +1,21 @@
-# Requirements
+# Server-side of the Altametrics challenge
 
-node v24.6.0
-docker engine v28.3.2
-docker compose v2.39.1
+## Requirements
 
-1. Spin up the postgres database locally
-   `docker compose up -d`
+- Node v24.6.0
+- Docker engine v28.3.2
+- Docker compose v2.39.1
 
-2. Creates the sql migration files from the prisma models and runs them against the database
-   `npx prisma migrate dev --name init`
+## Follow this steps to spin up the api locally
 
-3. Seed the database
-   npm run db:seed
+1. Spin up the postgres database
 
-Prisma automatically invokes the prisma generate command for you. In the future, you need to run this command after every change to your Prisma models to update your generated Prisma Client.
+   > docker compose up -d
 
-3. Start the nest api server
-   `npm run start`
+2. Seed the database to create the root user and multiple invoices
 
-`npx prisma generate` to generate the client types
+   > npm run db:seed
 
-.. pnpm insatlled for client
+3. Start the api server
+
+   > npm run start
