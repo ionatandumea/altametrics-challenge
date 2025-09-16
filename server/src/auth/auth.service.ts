@@ -23,7 +23,7 @@ export class AuthService {
       throw new BadRequestException('Password does not match');
     }
 
-    // TODO: uncomment later & retest
+    // TODO: uncomment later & re-test
     // const isMatch: boolean = bcrypt.compareSync(password, user.password);
     // if (!isMatch) {
     //   throw new BadRequestException('Password does not match');
@@ -37,10 +37,12 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
+      email: user.email,
+      id: user.id,
+      name: user.name,
     };
   }
 
-  // TODO: delete later
   async register(user: CreateAuthDto) {
     const existingUser = await this.usersService.findOneByEmail(user.email);
 
