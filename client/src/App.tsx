@@ -1,22 +1,13 @@
-import { Link, Routes, Route } from 'react-router-dom';
-import Login from './pages/login';
-import Invoices from './pages/invoices';
+import { Routes, Route } from "react-router-dom";
+import Login from "@/pages/Login";
+import Invoices from "@/pages/Invoices";
 
 export const App = () => {
   return (
-    <div className="p-6">
-      <nav className="mb-6 flex gap-4">
-        <Link to="/" className="text-blue-500 hover:underline">
-          Home
-        </Link>
-        <Link to="/about" className="text-blue-500 hover:underline">
-          About
-        </Link>
-      </nav>
-
+    <div className="flex min-h-screen items-center justify-center">
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/about" element={<Invoices />} />
+        <Route path="/invoices" element={<Invoices />} />
       </Routes>
     </div>
   );

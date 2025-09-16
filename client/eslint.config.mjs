@@ -1,40 +1,40 @@
-import eslintReact from '@eslint-react/eslint-plugin';
-import js from '@eslint/js';
-import stylistic from '@stylistic/eslint-plugin';
-import eslintConfigPrettier from 'eslint-config-prettier/flat';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
-import { defineConfig, globalIgnores } from 'eslint/config';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import eslintReact from "@eslint-react/eslint-plugin";
+import js from "@eslint/js";
+import stylistic from "@stylistic/eslint-plugin";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import { defineConfig, globalIgnores } from "eslint/config";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default defineConfig([
   globalIgnores([
-    'dist',
-    'node_modules',
-    'scripts/*',
-    'config/*',
-    'pnpm-lock.yaml',
-    'pnpm-workspace.yaml',
-    '.DS_Store',
-    'package.json',
-    'tsconfig.json',
-    '**/*.md',
-    'build',
-    '.eslintrc.cjs',
-    'eslint.config.js',
+    "dist",
+    "node_modules",
+    "scripts/*",
+    "config/*",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+    ".DS_Store",
+    "package.json",
+    "tsconfig.json",
+    "**/*.md",
+    "build",
+    ".eslintrc.cjs",
+    "eslint.config.js",
   ]),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     plugins: {
-      '@stylistic': stylistic,
+      "@stylistic": stylistic,
     },
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
+      reactHooks.configs["recommended-latest"],
       reactRefresh.configs.vite,
-      eslintReact.configs['recommended-typescript'],
+      eslintReact.configs["recommended-typescript"],
       eslintConfigPrettier,
     ],
     languageOptions: {
@@ -46,22 +46,23 @@ export default defineConfig([
       },
       ecmaVersion: 2022,
       globals: globals.browser,
-      sourceType: 'module',
+      sourceType: "module",
     },
     rules: {
-      '@eslint-react/no-leaked-conditional-rendering': 'warn',
-      '@stylistic/jsx-curly-brace-presence': [
-        'warn',
-        { props: 'never', children: 'never', propElementValues: 'always' },
+      "react-refresh/only-export-components": "off",
+      "@eslint-react/no-leaked-conditional-rendering": "warn",
+      "@stylistic/jsx-curly-brace-presence": [
+        "warn",
+        { props: "never", children: "never", propElementValues: "always" },
       ],
-      '@stylistic/quotes': ['warn', 'single'],
-      '@typescript-eslint/no-empty-object-type': 'warn',
-      '@typescript-eslint/no-unused-vars': 'warn',
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
+      "@stylistic/quotes": "off",
+      "@typescript-eslint/no-empty-object-type": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
         {
-          prefer: 'type-imports',
-          fixStyle: 'separate-type-imports',
+          prefer: "type-imports",
+          fixStyle: "separate-type-imports",
         },
       ],
     },

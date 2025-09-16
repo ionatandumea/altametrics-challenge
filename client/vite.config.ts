@@ -1,15 +1,21 @@
-import tailwindcss from '@tailwindcss/vite';
-import react from '@vitejs/plugin-react-swc';
-import path from 'node:path';
-import { defineConfig } from 'vite';
-import eslint from 'vite-plugin-eslint2';
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react-swc";
+import path from "node:path";
+import { defineConfig } from "vite";
+import eslint from "vite-plugin-eslint2";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), eslint()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    eslint({
+      exclude: ["src/components/ui/**"],
+    }),
+  ],
   resolve: {
     alias: {
-      '@': path.resolve('./src'),
+      "@": path.resolve("./src"),
     },
   },
 });
