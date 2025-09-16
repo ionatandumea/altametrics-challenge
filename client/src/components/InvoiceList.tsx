@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 import type {
   ColumnDef,
@@ -37,8 +37,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useInvoices } from "@/hooks/useInvoices";
 
+import { useInvoices } from "@/hooks/useInvoices";
 import { toast } from "sonner";
 
 export type Invoice = {
@@ -51,48 +51,45 @@ export type Invoice = {
   paid: boolean;
 };
 
-const data = [
-  {
-    id: 1,
-    vendorName: "hersdfsd",
-    userId: 2,
-  },
-];
-
 export const columns: ColumnDef<Invoice>[] = [
   {
     id: "select",
     header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
+      <div className="flex justify-center">
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      </div>
     ),
     cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
+      <div className="flex justify-center">
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      </div>
     ),
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: "vendorName",
-    header: "Vendor Name",
+    header: () => <div className="text-left">Payee</div>,
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("vendorName")}</div>
+      <div className="text-left capitalize">{row.getValue("vendorName")}</div>
     ),
+    enableSorting: false, // explicitly disable
   },
   {
     accessorKey: "dueDate",
-    header: ({ column }) => {
-      return (
+    header: ({ column }) => (
+      <div className="flex justify-center">
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -100,78 +97,75 @@ export const columns: ColumnDef<Invoice>[] = [
           Due Date
           <ArrowUpDown />
         </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue("dueDate")}</div>
+      </div>
     ),
+    cell: ({ row }) => {
+      const date = new Date(row.getValue("dueDate"));
+      const formattedDate = date.toLocaleDateString("en-GB");
+      return <div className="text-center lowercase">{formattedDate}</div>;
+    },
+    enableSorting: true, // explicitly enable
   },
   {
     accessorKey: "paid",
-    header: ({ column }) => {
-      return (
+    header: () => <div className="text-center">Status</div>,
+    cell: ({ row }) => (
+      <div className="text-center">
+        {JSON.stringify(row.getValue("paid")) === "true" ? "Paid" : "Open"}
+      </div>
+    ),
+    enableSorting: false,
+  },
+  {
+    accessorKey: "amount",
+    header: ({ column }) => (
+      <div className="text-center">
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Paid
+          Amount
           <ArrowUpDown />
         </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="capitalize">{JSON.stringify(row.getValue("paid"))}</div>
+      </div>
     ),
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
-      return (
-        <div className="text-right font-medium">{row.getValue("amount")}</div>
-      );
+      const amount = parseFloat(row.getValue("amount"));
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(amount);
+      return <div className="text-center font-medium">{formatted}</div>;
     },
+    enableSorting: true,
   },
   {
     accessorKey: "userId",
-    header: () => <div className="text-right">User Id</div>,
-    cell: ({ row }) => {
-      return (
-        <div className="text-right font-medium">{row.getValue("userId")}</div>
-      );
-    },
+    header: () => <div className="text-center">User Id</div>,
+    cell: ({ row }) => (
+      <div className="text-center font-medium">{row.getValue("userId")}</div>
+    ),
+    enableSorting: false,
   },
   {
     accessorKey: "description",
     header: () => <div className="text-right">Description</div>,
-    cell: ({ row }) => {
-      return (
-        <div className="text-right font-medium">
-          {row.getValue("description")}
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <div className="text-right font-medium">
+        {row.getValue("description")}
+      </div>
+    ),
+    enableSorting: false,
   },
 ];
 
 export function InvoiceList() {
-  const { data: dataTest, isLoading, isError } = useInvoices();
+  const { data, isPending, isError } = useInvoices();
 
-  React.useEffect(() => {
-    if (isError) {
-      toast.error("Failed to load invoices!");
-    } else if (dataTest?.length) {
-      toast.success(`${dataTest.length} invoices loaded successfully`);
-    }
-  }, [isLoading, isError, dataTest]);
-
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
@@ -192,11 +186,23 @@ export function InvoiceList() {
     },
   });
 
+  useEffect(() => {
+    if (isError) {
+      toast.error("Failed to load invoices!");
+    } else if (data?.length) {
+      toast.success(`${data.length} invoices loaded successfully`);
+    }
+  }, [isError, data]);
+
+  if (isPending) {
+    return <p className="text-center">Loading...</p>;
+  }
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter vendors..."
+          placeholder="Filter payees..."
           value={
             (table.getColumn("vendorName")?.getFilterValue() as string) ?? ""
           }
