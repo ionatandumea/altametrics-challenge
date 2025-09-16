@@ -10,6 +10,9 @@ docker compose v2.39.1
 2. Creates the sql migration files from the prisma models and runs them against the database
    `npx prisma migrate dev --name init`
 
+3. Seed the database
+   npm run db:seed
+
 Prisma automatically invokes the prisma generate command for you. In the future, you need to run this command after every change to your Prisma models to update your generated Prisma Client.
 
 3. Start the nest api server
