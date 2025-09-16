@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { JwtPaylod } from './jwt.strategy';
+import { CreateAuthDto } from 'src/auth/dto/create-auth.dto';
+import { JwtPaylod } from 'src/auth/jwt.strategy';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +23,7 @@ export class AuthService {
       throw new BadRequestException('Password does not match');
     }
 
+    // TODO: uncomment later & retest
     // const isMatch: boolean = bcrypt.compareSync(password, user.password);
     // if (!isMatch) {
     //   throw new BadRequestException('Password does not match');
@@ -39,6 +40,7 @@ export class AuthService {
     };
   }
 
+  // TODO: delete later
   async register(user: CreateAuthDto) {
     const existingUser = await this.usersService.findOneByEmail(user.email);
 
