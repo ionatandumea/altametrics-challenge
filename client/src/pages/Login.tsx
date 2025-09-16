@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { userLogin } from "@/features/auth/authActions";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +14,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address").min(3).max(100),
@@ -22,6 +27,17 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
+  const { loading, userInfo } = useAppSelector((state) => state.auth);
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/invoices");
+    }
+  }, [navigate, userInfo]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,7 +47,9 @@ const LoginForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    const { email, password } = values;
+    const result = dispatch(userLogin({ email, password }));
+    console.log("LOGIN result", result);
   }
 
   return (
@@ -74,8 +92,16 @@ const LoginForm = () => {
           <Button
             type="submit"
             className="w-full bg-blue-600 text-white hover:bg-blue-700"
+            disabled={loading}
           >
-            Sign In
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Signing In...
+              </>
+            ) : (
+              "Sign In"
+            )}
           </Button>
         </form>
       </Form>
