@@ -40,6 +40,12 @@ import {
 
 import { useInvoices } from "@/hooks/useInvoices";
 import { toast } from "sonner";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@radix-ui/react-popover";
+import { Label } from "./ui/label";
 
 export type Invoice = {
   id: string;
@@ -198,6 +204,11 @@ export function InvoiceList() {
     return <p className="text-center">Loading...</p>;
   }
 
+  function handleRowClick(invoice: Invoice) {
+    console.log("Row clicked:", invoice);
+    // Do something, e.g., navigate, open a modal, etc.
+  }
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -261,19 +272,59 @@ export function InvoiceList() {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <Popover key={row.id}>
+                  <PopoverTrigger asChild>
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      onClick={() => handleRowClick(row.original)}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 space-y-2 rounded-lg border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-500 dark:bg-gray-800">
+                    <div className="flex justify-between">
+                      <span className="font-semibold">Payee:</span>
+                      <span>{row.original.vendorName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold">Amount:</span>
+                      <span>
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        }).format(row.original.amount)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold">Due Date:</span>
+                      <span>
+                        {new Date(row.original.dueDate).toLocaleDateString(
+                          "en-GB",
+                        )}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold">Status:</span>
+                      <span>{row.original.paid ? "Paid" : "Open"}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold">User ID:</span>
+                      <span>{row.original.userId}</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-semibold">Description:</span>
+                      <span>{row.original.description}</span>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               ))
             ) : (
               <TableRow>
