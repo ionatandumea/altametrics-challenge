@@ -19,3 +19,5 @@ Prisma automatically invokes the prisma generate command for you. In the future,
    `npm run start`
 
 `npx prisma generate` to generate the client types
+
+.. pnpm insatlled for client
