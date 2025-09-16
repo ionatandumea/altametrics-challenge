@@ -18,7 +18,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -26,9 +26,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -42,47 +39,27 @@ import {
 } from "@/components/ui/table";
 import { useInvoices } from "@/hooks/useInvoices";
 
-const data: Payment[] = [
+import { toast } from "sonner";
+
+export type Invoice = {
+  id: string;
+  vendorName: string;
+  amount: number;
+  dueDate: Date;
+  userId: number;
+  description: string;
+  paid: boolean;
+};
+
+const data = [
   {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
+    id: 1,
+    vendorName: "hersdfsd",
+    userId: 2,
   },
 ];
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Invoice>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -106,76 +83,88 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "vendorName",
+    header: "Vendor Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">{row.getValue("vendorName")}</div>
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: "dueDate",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Due Date
           <ArrowUpDown />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("dueDate")}</div>
+    ),
+  },
+  {
+    accessorKey: "paid",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Paid
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="capitalize">{JSON.stringify(row.getValue("paid"))}</div>
+    ),
   },
   {
     accessorKey: "amount",
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+      return (
+        <div className="text-right font-medium">{row.getValue("amount")}</div>
+      );
     },
   },
   {
-    id: "actions",
-    enableHiding: false,
+    accessorKey: "userId",
+    header: () => <div className="text-right">User Id</div>,
     cell: ({ row }) => {
-      const payment = row.original;
-
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="text-right font-medium">{row.getValue("userId")}</div>
+      );
+    },
+  },
+  {
+    accessorKey: "description",
+    header: () => <div className="text-right">Description</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="text-right font-medium">
+          {row.getValue("description")}
+        </div>
       );
     },
   },
 ];
 
 export function InvoiceList() {
-  console.log("calling invoices");
-  const query = useInvoices();
+  const { data: dataTest, isLoading, isError } = useInvoices();
+
+  React.useEffect(() => {
+    if (isError) {
+      toast.error("Failed to load invoices!");
+    } else if (dataTest?.length) {
+      toast.success(`${dataTest.length} invoices loaded successfully`);
+    }
+  }, [isLoading, isError, dataTest]);
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -207,10 +196,12 @@ export function InvoiceList() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter vendors..."
+          value={
+            (table.getColumn("vendorName")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("vendorName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

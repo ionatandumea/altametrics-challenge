@@ -1,18 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchInvoiceById, fetchInvoices } from "../api/invoices";
-
-const QUERY_KEY = "invoices";
+import { queryKeys } from "@/constants/queryKeys";
 
 export const useInvoices = () => {
   return useQuery({
-    queryKey: [QUERY_KEY],
+    queryKey: queryKeys.invoices,
     queryFn: fetchInvoices,
   });
 };
 
 export const useInvoice = (id: number) => {
   return useQuery({
-    queryKey: [QUERY_KEY, id],
-    queryFn: () => fetchInvoiceById(id), 
+    queryKey: queryKeys.invoice(id),
+    queryFn: () => fetchInvoiceById(id),
   });
 };
