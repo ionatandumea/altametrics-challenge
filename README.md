@@ -81,3 +81,17 @@
    email:    root@root.com
    password: root123
    ```
+
+# ✨ Project Showcase
+
+## 🔐 Login Page
+
+<div align="center">
+  <img src="login-page.png" alt="Login Page" width="600" style="border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.15);" />
+</div>
+
+## 🧾 Invoices Page
+
+<div align="center">
+  <img src="invoices-page.png" alt="Invoices Page" width="600" style="border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.15);" />
+</div>
