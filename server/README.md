@@ -12,6 +12,10 @@
 
    > docker compose up -d
 
+2. Install the dependencies
+
+   > npm install
+
 2. Seed the database to create the root user and multiple invoices
 
    > npm run db:seed
