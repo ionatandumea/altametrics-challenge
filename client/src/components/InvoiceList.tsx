@@ -82,6 +82,7 @@ const invoiceColumns = (): ColumnDef<Invoice>[] => [
       <div className="flex justify-center">
         <Button
           variant="ghost"
+          className="cursor-pointer"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Due Date
@@ -109,6 +110,7 @@ const invoiceColumns = (): ColumnDef<Invoice>[] => [
       <div className="text-center">
         <Button
           variant="ghost"
+          className="cursor-pointer"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Amount
@@ -229,7 +231,10 @@ export function InvoiceList() {
               table.getRowModel().rows.map((row) => (
                 <Popover key={row.id}>
                   <PopoverTrigger asChild>
-                    <TableRow data-state={row.getIsSelected() && "selected"}>
+                    <TableRow
+                      data-state={row.getIsSelected() && "selected"}
+                      className="cursor-pointer"
+                    >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
                           {flexRender(
