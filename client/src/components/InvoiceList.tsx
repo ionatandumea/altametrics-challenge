@@ -124,13 +124,6 @@ const invoiceColumns = (): ColumnDef<Invoice>[] => [
     enableSorting: true,
   },
   {
-    accessorKey: "userId",
-    header: () => <div className="text-center">User Id</div>,
-    cell: ({ row }) => (
-      <div className="text-center font-medium">{row.getValue("userId")}</div>
-    ),
-  },
-  {
     accessorKey: "description",
     header: () => <div className="text-right">Description</div>,
     cell: ({ row }) => (
