@@ -106,3 +106,9 @@ This should reset any stored session data and allow you to log in again.
 <div align="center">
   <img src="invoices-page.png" alt="Invoices Page" width="600" style="border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.15);" />
 </div>
+
+## 📝 Invoice Details
+
+<div align="center">
+  <img src="invoice-detail-popup.png" alt="Invoices Page" width="600" style="border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.15);" />
+</div>
