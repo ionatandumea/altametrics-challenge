@@ -8,8 +8,4 @@ export class InvoicesService {
   findAll() {
     return this.prisma.invoice.findMany();
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} invoice`;
-  }
 }
