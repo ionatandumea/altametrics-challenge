@@ -82,6 +82,17 @@
    password: root123
    ```
 
+# ⚠️ Troubleshooting Potential Login Issues
+
+If you run into issues logging in, try clearing the local storage:
+
+1. Open **Inspect** (right-click → Inspect or press `F12`)
+2. Go to the **Application** tab
+3. Under **Local Storage**, find and right-click on **http://localhost:5173**
+4. Click **Clear**
+
+This should reset any stored session data and allow you to log in again.
+
 # ✨ Project Showcase
 
 ## 🔐 Login Page
