@@ -1,18 +1,12 @@
 import axios from "axios";
 import { apiClient } from "@/api/apiClient";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import type { UserInfo } from "./authSlice";
 
 type LoginPayload = {
   email: string;
   password: string;
 };
-
-interface UserInfo {
-  id: string;
-  name: string;
-  email: string;
-  userToken: string;
-}
 
 export const userLogin = createAsyncThunk(
   "auth/login",

@@ -2,7 +2,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 import { userLogin } from "./authActions";
 
-interface UserInfo {
+export interface UserInfo {
   id: string;
   name: string;
   email: string;
